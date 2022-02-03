@@ -1,0 +1,819 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 60,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "Mbits"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 16,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max",
+            "min",
+            "mean",
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "hide": true,
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  download_bandwidth\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  download_bandwidth\nFROM speedtest\nORDER BY timestamp",
+          "refId": "Download",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        },
+        {
+          "hide": true,
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  upload_bandwidth\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  upload_bandwidth\nFROM speedtest\nORDER BY timestamp",
+          "refId": "Upload",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        },
+        {
+          "datasource": "__expr__",
+          "expression": "$Download * 0.000008",
+          "hide": false,
+          "refId": "Download Throughput",
+          "type": "math"
+        },
+        {
+          "datasource": "__expr__",
+          "expression": "$Upload * 0.000008",
+          "hide": false,
+          "refId": "Upload Throughput",
+          "type": "math"
+        }
+      ],
+      "title": "Throughput",
+      "type": "timeseries"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "Mbits"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 0
+      },
+      "id": 10,
+      "interval": "1m",
+      "maxDataPoints": 608,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "min"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.2.6",
+      "targets": [
+        {
+          "hide": true,
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  max(download_bandwidth)\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  max(download_bandwidth)\nFROM speedtest\nORDER BY timestamp",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        },
+        {
+          "hide": true,
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  min(download_bandwidth)\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  min(download_bandwidth)\nFROM speedtest\nORDER BY timestamp",
+          "refId": "B",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        },
+        {
+          "hide": true,
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  avg(download_bandwidth)\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  avg(download_bandwidth)\nFROM speedtest\nORDER BY timestamp",
+          "refId": "C",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        },
+        {
+          "datasource": "__expr__",
+          "expression": "$A * 0.000008",
+          "hide": false,
+          "refId": "Max",
+          "type": "math"
+        },
+        {
+          "datasource": "__expr__",
+          "expression": "$B * 0.000008",
+          "hide": false,
+          "refId": "Min",
+          "type": "math"
+        },
+        {
+          "datasource": "__expr__",
+          "expression": "$C * 0.000008",
+          "hide": false,
+          "refId": "Average",
+          "type": "math"
+        }
+      ],
+      "timeFrom": "1w",
+      "timeShift": null,
+      "title": "Download",
+      "type": "stat"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "yellow",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "Mbits"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 4
+      },
+      "id": 12,
+      "interval": "1m",
+      "maxDataPoints": 608,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.2.6",
+      "targets": [
+        {
+          "hide": true,
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  max(upload_bandwidth)\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  max(upload_bandwidth)\nFROM speedtest\nORDER BY timestamp",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        },
+        {
+          "hide": true,
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  min(upload_bandwidth)\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  min(upload_bandwidth)\nFROM speedtest\nORDER BY timestamp",
+          "refId": "B",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        },
+        {
+          "hide": true,
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  avg(upload_bandwidth)\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  avg(upload_bandwidth)\nFROM speedtest\nORDER BY timestamp",
+          "refId": "C",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        },
+        {
+          "datasource": "__expr__",
+          "expression": "$A * 0.000008",
+          "hide": false,
+          "refId": "Max",
+          "type": "math"
+        },
+        {
+          "datasource": "__expr__",
+          "expression": "$B * 0.000008",
+          "hide": false,
+          "refId": "Min",
+          "type": "math"
+        },
+        {
+          "datasource": "__expr__",
+          "expression": "$C * 0.000008",
+          "hide": false,
+          "refId": "Average",
+          "type": "math"
+        }
+      ],
+      "timeFrom": "1w",
+      "timeShift": null,
+      "title": "Upload",
+      "type": "stat"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 8
+      },
+      "id": 14,
+      "interval": "1m",
+      "maxDataPoints": 1488,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.2.6",
+      "targets": [
+        {
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  min(ping_latency) AS \"Best\"\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  min(ping_latency) AS \"Best\"\nFROM speedtest\nORDER BY timestamp",
+          "refId": "Best",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        },
+        {
+          "hide": false,
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  max(ping_latency) AS \"Worst\"\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  max(ping_latency) AS \"Worst\"\nFROM speedtest\nORDER BY timestamp",
+          "refId": "Worst",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        },
+        {
+          "hide": false,
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  avg(ping_latency) AS \"Average\"\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  avg(ping_latency) AS \"Average\"\nFROM speedtest\nORDER BY timestamp",
+          "refId": "Average",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "timeFrom": "1w",
+      "timeShift": null,
+      "title": "Latency",
+      "type": "stat"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 60,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "displayName": "Ping Latency",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ping_latency"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "semi-dark-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 16,
+        "x": 0,
+        "y": 10
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max",
+            "min",
+            "mean",
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  ping_latency\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  ping_latency\nFROM speedtest\nORDER BY timestamp",
+          "refId": "Latency",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Latency",
+      "type": "timeseries"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 60,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "log": 2,
+              "type": "log"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "displayName": "Duration",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Duration"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 16,
+        "y": 12
+      },
+      "id": 16,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "hidden",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  MAX(download_elapsed, upload_elapsed) AS \"Duration\"\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  MAX(download_elapsed, upload_elapsed) AS \"Duration\"\nFROM speedtest\nORDER BY timestamp",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Duration",
+      "type": "timeseries"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "left",
+            "displayMode": "auto",
+            "filterable": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "download_throughput"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "gradient-gauge"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-RdYlGr"
+                }
+              },
+              {
+                "id": "unit",
+                "value": "Mbits"
+              },
+              {
+                "id": "min",
+                "value": 0
+              },
+              {
+                "id": "max",
+                "value": 75
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "upload_throughput"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "gradient-gauge"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-RdYlGr"
+                }
+              },
+              {
+                "id": "unit",
+                "value": "Mbits"
+              },
+              {
+                "id": "min",
+                "value": 0
+              },
+              {
+                "id": "max",
+                "value": 25
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ping_latency"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "gradient-gauge"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-GrYlRd"
+                }
+              },
+              {
+                "id": "unit",
+                "value": "ms"
+              },
+              {
+                "id": "min",
+                "value": 0
+              },
+              {
+                "id": "max",
+                "value": 15
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 6,
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "8.2.6",
+      "targets": [
+        {
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  (download_bandwidth * 0.000008) as download_throughput, (upload_bandwidth * 0.000008) as upload_throughput, ping_latency, server_id, server_host, server_port, server_ip\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  (download_bandwidth * 0.000008) as download_throughput, (upload_bandwidth * 0.000008) as upload_throughput, ping_latency, server_id, server_host, server_port, server_ip\nFROM speedtest\nORDER BY timestamp",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Test Results",
+      "type": "table"
+    }
+  ],
+  "schemaVersion": 32,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Speedtest",
+  "uid": "PRm7jma7k",
+  "version": 1
+}

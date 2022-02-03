@@ -1,0 +1,63 @@
+[tool.poetry]
+name = "speedtest_aio"
+version = "0.3.0"
+description = "A Python script to capture speedtest JSON and insert it into a database."
+authors = ["Aaron Melton <aaron@aaronmelton.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+bandit = "^1.7.1"
+black = "^21.12b0"
+flake8 = "^4.0.1"
+isort = "^5.10.1"
+pydocstyle = "^6.1.1"
+pylint = "^2.12.2"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pylint.messages_control]
+# line-too-long, bad-continuation: Allowing Black to enforce line length.
+# logging-fstring-interpolation: Using f-strings in logging so I can log output
+# to the console AND the log file simultaneously.
+#
+# broad-except: Actual exception doesn't matter to execution of script.
+# line-too-long: I dont care about long lines
+disable = '''
+    broad-except,
+    line-too-long,
+    '''
+
+[tool.bandit]
+# Ignoring subprocess complaints; Yes, I've counted the cost.
+skips = ['B404', 'B603']
+exclude_dirs = ["./tests/"]
+
+[tool.black]
+line-length = 120
+include = '\.pyi?$'
+exclude = '''
+        /(
+          \.git
+        | \.tox
+        | \.venv
+        | env/
+        | _build
+        | build
+        | dist
+        )/
+    '''
+
+[tool.pydocstyle]
+convention = '''google'''
+inherit = false
+match = '''(?!__init__).*\.py'''
+match-dir = '''(?!tests)[^\.].*'''
+
+[tool.pylint.miscellaneous]
+notes = ''',
+	TODO.md,
+    '''
