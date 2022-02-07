@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [0.3.1] - 2022-02-07
+### Changed
+- pyproject.toml: Updating pbr (5.8.0 -> 5.8.1)
+- pyproject.toml: Moved development-only packages into [tool.poetry.dev-dependencies]
+
 ## [0.3.0] - 2022-02-03
 ### Added
 - docker-compose.yml

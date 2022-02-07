@@ -44,8 +44,8 @@ Dashboard and Database data is persistent through the use of Docker Volumes.
 
 * Default username/password is admin/admin.
 * You will be prompted to change your password upon first login.
-* Access your Grafana dashboard via [http://localhost:3000](http://localhost:3000) OR replace localhost with the IP Address of the host.
-* **WARNING** This dashboard will be accessible to all hosts in the same subnet!
+* Access your Grafana dashboard via [http://localhost:3000](http://localhost:3000) OR replace `localhost` with the IP Address of the host.
+* **WARNING:** This dashboard will be accessible to all hosts in the same subnet!
 
 ## Acknowledgements
 * Grafana dashboard layout borrowed from [speedtest_exporter](https://github.com/danopstech/speedtest_exporter).
