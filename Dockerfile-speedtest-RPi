@@ -1,0 +1,67 @@
+##################
+### BASE IMAGE ###
+##################
+
+ARG PYTHON_VER=3.10
+
+# Need to use the Buster image for Raspberry Pis
+FROM python:${PYTHON_VER}-buster AS base
+
+WORKDIR /usr/src/speedtest_aio
+
+# Poetry from the repo doesn't work for whatever reason so we'll install
+# directly from the source and update all poetry commands to use the path
+# to the new poetry
+RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+RUN /root/.poetry/bin/poetry config virtualenvs.create false
+
+COPY pyproject.toml .
+
+RUN /root/.poetry/bin/poetry install --no-dev
+
+##################
+### TEST IMAGE ###
+##################
+
+FROM base AS test
+
+RUN /root/.poetry/bin/poetry install
+
+COPY . .
+
+RUN echo '-->Running Flake8' && \
+    flake8 . && \
+    echo '-->Running Black' && \
+    black --check --diff . && \
+    echo '-->Running isort' && \
+    find . -name '*.py' | xargs isort && \
+    echo '-->Running Pylint' && \
+    find . -name '*.py' | xargs pylint --rcfile=pyproject.toml && \
+    echo '-->Running pydocstyle' && \
+    pydocstyle . --config=pyproject.toml && \
+    echo '-->Running Bandit' && \
+    bandit --recursive ./ --configfile pyproject.toml
+
+###################
+### FINAL IMAGE ###
+###################
+
+FROM python:${PYTHON_VER}-slim-buster
+
+ARG PYTHON_VER
+
+RUN apt-get update && apt-get install --no-install-recommends -y cron curl && \
+    apt-get clean
+
+# Install Speedtest CLI
+RUN curl -s https://install.speedtest.net/app/cli/install.deb.sh | bash
+RUN apt-get update && apt-get install --no-install-recommends -y speedtest && \
+    apt-get clean
+
+COPY speedtest_aio-cron /etc/cron.d/
+RUN chmod 0644 /etc/cron.d/speedtest_aio-cron
+RUN /usr/bin/crontab /etc/cron.d/speedtest_aio-cron
+
+COPY speedtest_aio/*.py /usr/src/speedtest_aio/
+
+CMD ["cron", "-f"]

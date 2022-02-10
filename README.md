@@ -47,6 +47,14 @@ Dashboard and Database data is persistent through the use of Docker Volumes.
 * Access your Grafana dashboard via [http://localhost:3000](http://localhost:3000) OR replace `localhost` with the IP Address of the host.
 * **WARNING:** This dashboard will be accessible to all hosts in the same subnet!
 
+#### Support For Raspberry Pi
+
+If you are installing this Docker image on a Raspberry Pi, you will need to use
+the `Dockerfile-speedtest-RPi` created specifically for this purpose.
+
+Edit the `docker-compose.yml` file and change the line from `dockerfile: Dockerfile-speedtest` 
+to `dockerfile: Dockerfile-speedtest-RPi` before continuing with your `docker-compose build`.
+
 ## Acknowledgements
 * Grafana dashboard layout borrowed from [speedtest_exporter](https://github.com/danopstech/speedtest_exporter).
 
