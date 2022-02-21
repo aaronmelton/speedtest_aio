@@ -1,5 +1,5 @@
 FROM grafana/grafana:latest
 
-COPY grafana/datasource.yml /etc/grafana/provisioning/datasources/
-COPY grafana/dashboard.yml /etc/grafana/provisioning/dashboards/
-COPY grafana/grafana_dashboard.json /etc/grafana/provisioning/dashboards/
+COPY --chown=grafana:root grafana/datasource.yml /etc/grafana/provisioning/datasources/
+COPY --chown=grafana:root grafana/dashboard.yml /etc/grafana/provisioning/dashboards/
+COPY --chown=grafana:root grafana/grafana_dashboard.json /etc/grafana/provisioning/dashboards/

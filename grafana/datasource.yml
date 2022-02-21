@@ -6,4 +6,4 @@ datasources:
     isDefault: true
     editable: true
     jsonData:
-      path: /var/lib/db/speedtest_database.sqlite
+      path: /app/db/speedtest_database.sqlite

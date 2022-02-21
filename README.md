@@ -11,12 +11,13 @@ This script was written to track internet speed using Ookla's speed test.
 
 This repository contains everything necessary to build your own Speedtest dashboard (Python script, SQLite database, Grafana dashboard).
 
-Total application size is less than 450MB!  ~276MB for Grafana; ~153MB for Python/SQLite
+Total application size is less than 400MB!  ~276MB for Grafana; ~95MB for Python/SQLite
 
 Dashboard and Database data is persistent through the use of Docker Volumes.
 
 ### Prerequisites
-* Docker Engine
+* Docker; Verified to work with Docker version 20.10.12
+* Docker Compose; Verified to work with Docker Compose version 2.2.3 (Will not work with version 1.X.)
 * Docker host must be able to access Docker Hub
 
 #### Python Libraries
@@ -25,7 +26,7 @@ Dashboard and Database data is persistent through the use of Docker Volumes.
 ### Instructions For Use
 
 * Clone this repository.
-* Modify the `speedtest_aio-cron` file to adjust your test interval.  The default is 15 minutes.  Visit [crontab.guru](https://crontab.guru) for an example on cron scheduling syntax.
+* Modify the `crontab` file to adjust your test interval.  The default is 15 minutes.  Visit [crontab.guru](https://crontab.guru) for an example on cron scheduling syntax.
 * Modify the Test Results panel in Grafana to match the values for your Internet connection.  The default is set to 75Mb/s down and 25Mb/s up (which happen to be my Internet speed).
   Edit the Test Results panel, goto the Overrides and change the Max values for all Overrides to fit your situation.  (This will change the gradient levels for download_throughput, upload_throughput and ping_latency.)
 
@@ -39,6 +40,12 @@ Dashboard and Database data is persistent through the use of Docker Volumes.
 
 * To stop the application:
 `docker-compose down`
+
+* To wipe out your dashboard data:
+`docker-compose down` followed by `yes | docker volume prune`
+
+* To remove intermediate build images (no longer required after `docker-compose build`):
+`yes | docker image prune --filter "label=prune=true"`
 
 #### Grafana
 

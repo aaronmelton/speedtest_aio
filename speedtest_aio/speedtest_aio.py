@@ -34,7 +34,7 @@ def create_database(db_filename):
     # the sqlite3.connect() will create it.  We do need to check for the table.
     logger.info("Database file exists; Checking for correct table...")
     query = """SELECT name FROM sqlite_master WHERE type='table' AND name='speedtest'"""
-    check_table = db_query("/var/lib/db/speedtest_database.sqlite", query, None)
+    check_table = db_query("/app/db/speedtest_database.sqlite", query, None)
     if not check_table:
         logger.warning("Database table not found.")
         create_file = True
@@ -47,7 +47,7 @@ def create_database(db_filename):
             create_file = True
 
     if create_file:
-        logger.info("Database file and/or table does not exist; Attempting to create...")
+        logger.warning("Database file and/or table does not exist; Attempting to create...")
         try:
             cursor = database_connection.cursor()
             cursor.execute(
@@ -55,22 +55,11 @@ def create_database(db_filename):
                             test_id integer primary key autoincrement,
                             datetime text,
                             timestamp integer,
-                            ping_jitter float,
-                            ping_latency float,
-                            download_bandwidth integer,
-                            download_bytes integer,
-                            download_elapsed integer,
-                            upload_bandwidth integer,
-                            upload_bytes integer,
-                            upload_elapsed integer,
-                            packetloss integer,
+                            download integer,
+                            upload integer,
+                            ping float,
                             server_id integer,
-                            server_host text,
-                            server_port integer,
-                            server_name text,
-                            server_location text,
-                            server_country text,
-                            server_ip text)"""
+                            server_host text)"""
             )
             database_connection.commit()
             logger.info("Database created successfully!")
@@ -109,6 +98,7 @@ def db_query(db_filename, query, some_list):
             try:
                 logger.info("Writing changes to database...")
                 cursor.execute(query, some_list)
+                logger.info("Database write successful.")
             except Exception as some_exception:
                 logger.error("ERROR running query.")
                 logger.exception("ERROR=='%s'", some_exception)
@@ -130,6 +120,7 @@ def db_query(db_filename, query, some_list):
             logger.info("Querying database...")
             cursor.execute(query)
             output_json = cursor.fetchall()
+            logger.info("Database query successful.")
         except Exception as some_exception:
             logger.error("ERROR running query: %s", str(query))
             logger.exception("ERROR=='%s'", some_exception)
@@ -169,7 +160,7 @@ def main():
     # Setup Logging Functionality
     logging.basicConfig(
         # pylint: disable=line-too-long
-        filename=f"""/var/log/speedtest_aio_{date.today().strftime("%Y%m%d")}.log""",
+        filename=f"""/app/log/speedtest_aio_{date.today().strftime("%Y%m%d")}.log""",
         filemode="a",
         format="{asctime}  Log Level: {levelname:8}  Line: {lineno:4}  Function: {funcName:21}  Msg: {message}",
         style="{",
@@ -187,11 +178,10 @@ def main():
 
     logger.info("Running speedtest...")
     try:
-        process = subprocess.run(
-            ["/usr/bin/speedtest", "--accept-license", "-f", "json"], check=True, capture_output=True
-        )
+        process = subprocess.run(["/usr/bin/speedtest", "--json"], check=True, capture_output=True)
         speedtest_results = json.loads(process.stdout.decode("utf-8"))
         logger.debug("speedtest_results==%s", pretty_print(speedtest_results))
+        logger.info("Speedtest run successfully.")
 
     except Exception as some_exception:
         speedtest_results = None
@@ -203,28 +193,17 @@ def main():
         speedtest_list["datetime"] = speedtest_results["timestamp"]
 
         # Need to convert datetime/timestamp to epoch int; Works better with Grafana
-        utc_time = datetime.strptime(speedtest_list["datetime"], "%Y-%m-%dT%H:%M:%SZ")
+        utc_time = datetime.strptime(speedtest_list["datetime"], "%Y-%m-%dT%H:%M:%S.%fZ")
         epoch_time = (utc_time - datetime(1970, 1, 1)).total_seconds()
 
         speedtest_list["timestamp"] = int(epoch_time)
-        speedtest_list["ping_jitter"] = speedtest_results["ping"]["jitter"]
-        speedtest_list["ping_latency"] = speedtest_results["ping"]["latency"]
-        speedtest_list["download_bandwidth"] = speedtest_results["download"]["bandwidth"]
-        speedtest_list["download_bytes"] = speedtest_results["download"]["bytes"]
-        speedtest_list["download_elapsed"] = speedtest_results["download"]["elapsed"]
-        speedtest_list["upload_bandwidth"] = speedtest_results["upload"]["bandwidth"]
-        speedtest_list["upload_bytes"] = speedtest_results["upload"]["bytes"]
-        speedtest_list["upload_elapsed"] = speedtest_results["upload"]["elapsed"]
-        speedtest_list["packetloss"] = speedtest_results["packetLoss"]
+        speedtest_list["download"] = speedtest_results["download"]
+        speedtest_list["upload"] = speedtest_results["upload"]
+        speedtest_list["ping"] = speedtest_results["ping"]
         speedtest_list["server_id"] = speedtest_results["server"]["id"]
         speedtest_list["server_host"] = speedtest_results["server"]["host"]
-        speedtest_list["server_port"] = speedtest_results["server"]["port"]
-        speedtest_list["server_name"] = speedtest_results["server"]["name"]
-        speedtest_list["server_location"] = speedtest_results["server"]["location"]
-        speedtest_list["server_country"] = speedtest_results["server"]["country"]
-        speedtest_list["server_ip"] = speedtest_results["server"]["ip"]
 
-        if create_database("/var/lib/db/speedtest_database.sqlite"):
+        if create_database("/app/db/speedtest_database.sqlite"):
             db_columns = ", ".join(speedtest_list.keys())
             db_placeholders = ", ".join("?" * len(speedtest_list))
             query = f"""INSERT INTO speedtest ({db_columns}) VALUES ({db_placeholders})"""
@@ -232,7 +211,7 @@ def main():
             speedtest_values = [int(x) if isinstance(x, bool) else x for x in speedtest_list.values()]
 
             try:
-                db_query("/var/lib/db/speedtest_database.sqlite", query, speedtest_values)
+                db_query("/app/db/speedtest_database.sqlite", query, speedtest_values)
             except Exception as some_exception:
                 logger.error("ERROR running db_query")
                 logger.exception("EXCEPTION='%s'", str(some_exception))

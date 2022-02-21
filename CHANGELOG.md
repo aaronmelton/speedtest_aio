@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## [0.4.0] - 2022-02-21
+### Changed
+- docker-compose.yml: Updating paths to match changes in application.
+- Dockerfile-grafana: Added ownership flags to COPY command.
+- Dockerfile-speedtest-RPi: Replacing speedtest_aio-cron with crontab.
+- Dockerfile-speedtest: Updated for use in Alpine Linux.
+- grafana/datasource.yml: Updating paths to match changes in application.
+- grafana/grafana_dashboard.json: Updating to match changes to code.
+- README.md: Improved instructions for Docker operation.
+- speedtest_aio-cron: Updated for use in Alpine Linux.
+- speedtest_aio.py: create_database(): Removed fields that are no longer being tracked.
+
 ## [0.3.1] - 2022-02-07
 ### Changed
 - pyproject.toml: Updating pbr (5.8.0 -> 5.8.1)

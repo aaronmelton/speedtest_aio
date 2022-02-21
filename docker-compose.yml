@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile-speedtest
     image: speedtest_aio:latest
     volumes:
-      - speedtest-storage:/var/lib/db
+      - speedtest-storage:/app/db
     container_name: speedtest_aio
     network_mode: "bridge"
   speedtest_grafana:
@@ -24,7 +24,7 @@ services:
       - GF_INSTALL_PLUGINS=frser-sqlite-datasource
     volumes:
       - grafana-storage:/var/lib/grafana
-      - speedtest-storage:/var/lib/db
+      - speedtest-storage:/app/db
     depends_on:
       - speedtest_aio
     container_name: speedtest_grafana

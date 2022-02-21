@@ -4,10 +4,11 @@
 
 ARG PYTHON_VER=3.10
 
-FROM python:${PYTHON_VER} AS base
+FROM python:${PYTHON_VER}-alpine AS base
 
-WORKDIR /usr/src/speedtest_aio
+WORKDIR /app
 
+RUN apk --update add gcc build-base libffi-dev
 RUN pip install poetry
 RUN poetry config virtualenvs.create false
 
@@ -20,6 +21,7 @@ RUN poetry install --no-dev
 ##################
 
 FROM base AS test
+LABEL prune=true
 
 RUN poetry install
 
@@ -42,22 +44,27 @@ RUN echo '-->Running Flake8' && \
 ### FINAL IMAGE ###
 ###################
 
-FROM python:${PYTHON_VER}-slim
+FROM python:${PYTHON_VER}-alpine
 
 ARG PYTHON_VER
 
-RUN apt-get update && apt-get install --no-install-recommends -y cron curl && \
-    apt-get clean
+RUN apk --update add busybox-suid speedtest-cli supercronic
 
-# Install Speedtest CLI
-RUN curl -s https://install.speedtest.net/app/cli/install.deb.sh | bash
-RUN apt-get update && apt-get install --no-install-recommends -y speedtest && \
-    apt-get clean
+RUN ln -snf /usr/share/zoneinfo/UTC /etc/localtime
 
-COPY speedtest_aio-cron /etc/cron.d/
-RUN chmod 0644 /etc/cron.d/speedtest_aio-cron
-RUN /usr/bin/crontab /etc/cron.d/speedtest_aio-cron
+WORKDIR /app
 
-COPY speedtest_aio/*.py /usr/src/speedtest_aio/
+COPY entrypoint.sh /run/
+RUN chmod 755 /run/entrypoint.sh
 
-CMD ["cron", "-f"]
+RUN addgroup docker && adduser -s /bin/false -S -D -H docker -G docker
+
+COPY crontab /app/
+COPY speedtest_aio/*.py /app/
+RUN mkdir -p /app/db
+RUN mkdir -p /app/log/
+RUN chown -R docker:docker /app
+
+USER docker
+
+ENTRYPOINT ["/run/entrypoint.sh"]

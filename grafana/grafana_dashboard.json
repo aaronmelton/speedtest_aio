@@ -20,13 +20,12 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "gnetId": null,
   "graphTooltip": 0,
+  "id": 1,
   "links": [],
   "liveNow": false,
   "panels": [
     {
-      "datasource": null,
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -75,7 +74,7 @@
               }
             ]
           },
-          "unit": "Mbits"
+          "unit": "bps"
         },
         "overrides": []
       },
@@ -98,15 +97,20 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "targets": [
         {
-          "hide": true,
-          "queryText": "SELECT\n  timestamp AS \"time\",\n  download_bandwidth\nFROM speedtest\nORDER BY timestamp",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "P7B5A896714916120"
+          },
+          "hide": false,
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  download AS \"Download Throughput\"\nFROM speedtest\nORDER BY timestamp",
           "queryType": "table",
-          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  download_bandwidth\nFROM speedtest\nORDER BY timestamp",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  download AS \"Download Throughput\"\nFROM speedtest\nORDER BY timestamp",
           "refId": "Download",
           "timeColumns": [
             "time",
@@ -114,36 +118,25 @@
           ]
         },
         {
-          "hide": true,
-          "queryText": "SELECT\n  timestamp AS \"time\",\n  upload_bandwidth\nFROM speedtest\nORDER BY timestamp",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "P7B5A896714916120"
+          },
+          "hide": false,
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  upload AS \"Upload Throughput\"\nFROM speedtest\nORDER BY timestamp",
           "queryType": "table",
-          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  upload_bandwidth\nFROM speedtest\nORDER BY timestamp",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  upload AS \"Upload Throughput\"\nFROM speedtest\nORDER BY timestamp",
           "refId": "Upload",
           "timeColumns": [
             "time",
             "ts"
           ]
-        },
-        {
-          "datasource": "__expr__",
-          "expression": "$Download * 0.000008",
-          "hide": false,
-          "refId": "Download Throughput",
-          "type": "math"
-        },
-        {
-          "datasource": "__expr__",
-          "expression": "$Upload * 0.000008",
-          "hide": false,
-          "refId": "Upload Throughput",
-          "type": "math"
         }
       ],
       "title": "Throughput",
       "type": "timeseries"
     },
     {
-      "datasource": null,
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -160,12 +153,12 @@
               }
             ]
           },
-          "unit": "Mbits"
+          "unit": "bps"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 4,
+        "h": 6,
         "w": 8,
         "x": 16,
         "y": 0
@@ -188,70 +181,59 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.2.6",
+      "pluginVersion": "8.4.0",
       "targets": [
         {
-          "hide": true,
-          "queryText": "SELECT\n  timestamp AS \"time\",\n  max(download_bandwidth)\nFROM speedtest\nORDER BY timestamp",
-          "queryType": "table",
-          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  max(download_bandwidth)\nFROM speedtest\nORDER BY timestamp",
-          "refId": "A",
-          "timeColumns": [
-            "time",
-            "ts"
-          ]
-        },
-        {
-          "hide": true,
-          "queryText": "SELECT\n  timestamp AS \"time\",\n  min(download_bandwidth)\nFROM speedtest\nORDER BY timestamp",
-          "queryType": "table",
-          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  min(download_bandwidth)\nFROM speedtest\nORDER BY timestamp",
-          "refId": "B",
-          "timeColumns": [
-            "time",
-            "ts"
-          ]
-        },
-        {
-          "hide": true,
-          "queryText": "SELECT\n  timestamp AS \"time\",\n  avg(download_bandwidth)\nFROM speedtest\nORDER BY timestamp",
-          "queryType": "table",
-          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  avg(download_bandwidth)\nFROM speedtest\nORDER BY timestamp",
-          "refId": "C",
-          "timeColumns": [
-            "time",
-            "ts"
-          ]
-        },
-        {
-          "datasource": "__expr__",
-          "expression": "$A * 0.000008",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "P7B5A896714916120"
+          },
           "hide": false,
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  max(download) AS \"Max\"\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  max(download) AS \"Max\"\nFROM speedtest\nORDER BY timestamp",
           "refId": "Max",
-          "type": "math"
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
         },
         {
-          "datasource": "__expr__",
-          "expression": "$B * 0.000008",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "P7B5A896714916120"
+          },
           "hide": false,
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  min(download) AS \"Min\"\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  min(download) AS \"Min\"\nFROM speedtest\nORDER BY timestamp",
           "refId": "Min",
-          "type": "math"
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
         },
         {
-          "datasource": "__expr__",
-          "expression": "$C * 0.000008",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "P7B5A896714916120"
+          },
           "hide": false,
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  avg(download) AS \"Average\"\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  avg(download) AS \"Average\"\nFROM speedtest\nORDER BY timestamp",
           "refId": "Average",
-          "type": "math"
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
         }
       ],
       "timeFrom": "1w",
-      "timeShift": null,
       "title": "Download",
       "type": "stat"
     },
     {
-      "datasource": null,
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -268,15 +250,15 @@
               }
             ]
           },
-          "unit": "Mbits"
+          "unit": "bps"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 4,
+        "h": 6,
         "w": 8,
         "x": 16,
-        "y": 4
+        "y": 6
       },
       "id": 12,
       "interval": "1m",
@@ -296,156 +278,59 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.2.6",
+      "pluginVersion": "8.4.0",
       "targets": [
         {
-          "hide": true,
-          "queryText": "SELECT\n  timestamp AS \"time\",\n  max(upload_bandwidth)\nFROM speedtest\nORDER BY timestamp",
-          "queryType": "table",
-          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  max(upload_bandwidth)\nFROM speedtest\nORDER BY timestamp",
-          "refId": "A",
-          "timeColumns": [
-            "time",
-            "ts"
-          ]
-        },
-        {
-          "hide": true,
-          "queryText": "SELECT\n  timestamp AS \"time\",\n  min(upload_bandwidth)\nFROM speedtest\nORDER BY timestamp",
-          "queryType": "table",
-          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  min(upload_bandwidth)\nFROM speedtest\nORDER BY timestamp",
-          "refId": "B",
-          "timeColumns": [
-            "time",
-            "ts"
-          ]
-        },
-        {
-          "hide": true,
-          "queryText": "SELECT\n  timestamp AS \"time\",\n  avg(upload_bandwidth)\nFROM speedtest\nORDER BY timestamp",
-          "queryType": "table",
-          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  avg(upload_bandwidth)\nFROM speedtest\nORDER BY timestamp",
-          "refId": "C",
-          "timeColumns": [
-            "time",
-            "ts"
-          ]
-        },
-        {
-          "datasource": "__expr__",
-          "expression": "$A * 0.000008",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "P7B5A896714916120"
+          },
           "hide": false,
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  max(upload) AS \"Max\"\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  max(upload) AS \"Max\"\nFROM speedtest\nORDER BY timestamp",
           "refId": "Max",
-          "type": "math"
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
         },
         {
-          "datasource": "__expr__",
-          "expression": "$B * 0.000008",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "P7B5A896714916120"
+          },
           "hide": false,
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  min(upload) AS \"Min\"\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  min(upload) AS \"Min\"\nFROM speedtest\nORDER BY timestamp",
           "refId": "Min",
-          "type": "math"
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
         },
         {
-          "datasource": "__expr__",
-          "expression": "$C * 0.000008",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "P7B5A896714916120"
+          },
           "hide": false,
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  avg(upload) AS \"Average\"\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  avg(upload) AS \"Average\"\nFROM speedtest\nORDER BY timestamp",
           "refId": "Average",
-          "type": "math"
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
         }
       ],
       "timeFrom": "1w",
-      "timeShift": null,
       "title": "Upload",
       "type": "stat"
     },
     {
-      "datasource": null,
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "blue",
-            "mode": "fixed"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 8,
-        "x": 16,
-        "y": 8
-      },
-      "id": 14,
-      "interval": "1m",
-      "maxDataPoints": 1488,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "center",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "text": {},
-        "textMode": "auto"
-      },
-      "pluginVersion": "8.2.6",
-      "targets": [
-        {
-          "queryText": "SELECT\n  timestamp AS \"time\",\n  min(ping_latency) AS \"Best\"\nFROM speedtest\nORDER BY timestamp",
-          "queryType": "table",
-          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  min(ping_latency) AS \"Best\"\nFROM speedtest\nORDER BY timestamp",
-          "refId": "Best",
-          "timeColumns": [
-            "time",
-            "ts"
-          ]
-        },
-        {
-          "hide": false,
-          "queryText": "SELECT\n  timestamp AS \"time\",\n  max(ping_latency) AS \"Worst\"\nFROM speedtest\nORDER BY timestamp",
-          "queryType": "table",
-          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  max(ping_latency) AS \"Worst\"\nFROM speedtest\nORDER BY timestamp",
-          "refId": "Worst",
-          "timeColumns": [
-            "time",
-            "ts"
-          ]
-        },
-        {
-          "hide": false,
-          "queryText": "SELECT\n  timestamp AS \"time\",\n  avg(ping_latency) AS \"Average\"\nFROM speedtest\nORDER BY timestamp",
-          "queryType": "table",
-          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  avg(ping_latency) AS \"Average\"\nFROM speedtest\nORDER BY timestamp",
-          "refId": "Average",
-          "timeColumns": [
-            "time",
-            "ts"
-          ]
-        }
-      ],
-      "timeFrom": "1w",
-      "timeShift": null,
-      "title": "Latency",
-      "type": "stat"
-    },
-    {
-      "datasource": null,
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -533,14 +418,19 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "targets": [
         {
-          "queryText": "SELECT\n  timestamp AS \"time\",\n  ping_latency\nFROM speedtest\nORDER BY timestamp",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "P7B5A896714916120"
+          },
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  ping\nFROM speedtest\nORDER BY timestamp",
           "queryType": "table",
-          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  ping_latency\nFROM speedtest\nORDER BY timestamp",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  ping\nFROM speedtest\nORDER BY timestamp",
           "refId": "Latency",
           "timeColumns": [
             "time",
@@ -552,42 +442,12 @@
       "type": "timeseries"
     },
     {
-      "datasource": null,
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "fixedColor": "blue",
+            "mode": "fixed"
           },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 60,
-            "gradientMode": "opacity",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "log": 2,
-              "type": "log"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "displayName": "Duration",
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -595,32 +455,12 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
           "unit": "ms"
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Duration"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "purple",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 6,
@@ -628,34 +468,76 @@
         "x": 16,
         "y": 12
       },
-      "id": 16,
+      "id": 14,
+      "interval": "1m",
+      "maxDataPoints": 1488,
       "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "hidden",
-          "placement": "bottom"
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
         },
-        "tooltip": {
-          "mode": "multi"
-        }
+        "text": {},
+        "textMode": "auto"
       },
+      "pluginVersion": "8.4.0",
       "targets": [
         {
-          "queryText": "SELECT\n  timestamp AS \"time\",\n  MAX(download_elapsed, upload_elapsed) AS \"Duration\"\nFROM speedtest\nORDER BY timestamp",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "P7B5A896714916120"
+          },
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  min(ping) AS \"Best\"\nFROM speedtest\nORDER BY timestamp",
           "queryType": "table",
-          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  MAX(download_elapsed, upload_elapsed) AS \"Duration\"\nFROM speedtest\nORDER BY timestamp",
-          "refId": "A",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  min(ping) AS \"Best\"\nFROM speedtest\nORDER BY timestamp",
+          "refId": "Best",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        },
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "P7B5A896714916120"
+          },
+          "hide": false,
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  max(ping) AS \"Worst\"\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  max(ping) AS \"Worst\"\nFROM speedtest\nORDER BY timestamp",
+          "refId": "Worst",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        },
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "P7B5A896714916120"
+          },
+          "hide": false,
+          "queryText": "SELECT\n  timestamp AS \"time\",\n  avg(ping) AS \"Average\"\nFROM speedtest\nORDER BY timestamp",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  avg(ping) AS \"Average\"\nFROM speedtest\nORDER BY timestamp",
+          "refId": "Average",
           "timeColumns": [
             "time",
             "ts"
           ]
         }
       ],
-      "title": "Duration",
-      "type": "timeseries"
+      "timeFrom": "1w",
+      "title": "Latency",
+      "type": "stat"
     },
     {
-      "datasource": null,
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -685,7 +567,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "download_throughput"
+              "options": "download"
             },
             "properties": [
               {
@@ -700,7 +582,7 @@
               },
               {
                 "id": "unit",
-                "value": "Mbits"
+                "value": "bps"
               },
               {
                 "id": "min",
@@ -708,14 +590,14 @@
               },
               {
                 "id": "max",
-                "value": 75
+                "value": 75000000
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "upload_throughput"
+              "options": "upload"
             },
             "properties": [
               {
@@ -730,7 +612,7 @@
               },
               {
                 "id": "unit",
-                "value": "Mbits"
+                "value": "bps"
               },
               {
                 "id": "min",
@@ -738,14 +620,14 @@
               },
               {
                 "id": "max",
-                "value": 25
+                "value": 25000000
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "ping_latency"
+              "options": "ping"
             },
             "properties": [
               {
@@ -782,14 +664,25 @@
       },
       "id": 6,
       "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
         "showHeader": true
       },
-      "pluginVersion": "8.2.6",
+      "pluginVersion": "8.4.0",
       "targets": [
         {
-          "queryText": "SELECT\n  timestamp AS \"time\",\n  (download_bandwidth * 0.000008) as download_throughput, (upload_bandwidth * 0.000008) as upload_throughput, ping_latency, server_id, server_host, server_port, server_ip\nFROM speedtest\nORDER BY timestamp",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "P7B5A896714916120"
+          },
+          "queryText": "SELECT\n  timestamp AS \"time\", download, upload, ping, server_id, server_host\nFROM speedtest\nORDER BY timestamp",
           "queryType": "table",
-          "rawQueryText": "SELECT\n  timestamp AS \"time\",\n  (download_bandwidth * 0.000008) as download_throughput, (upload_bandwidth * 0.000008) as upload_throughput, ping_latency, server_id, server_host, server_port, server_ip\nFROM speedtest\nORDER BY timestamp",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\", download, upload, ping, server_id, server_host\nFROM speedtest\nORDER BY timestamp",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -801,7 +694,7 @@
       "type": "table"
     }
   ],
-  "schemaVersion": 32,
+  "schemaVersion": 35,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -815,5 +708,6 @@
   "timezone": "",
   "title": "Speedtest",
   "uid": "PRm7jma7k",
-  "version": 1
+  "version": 2,
+  "weekStart": ""
 }
