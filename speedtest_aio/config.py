@@ -11,5 +11,5 @@ app_dict = {
     "name": "speedtest_aio.py",
     "title": "Speedtest Monitor",
     "url": "https://github.com/aaronmelton/speedtest_aio",
-    "version": "v0.4.1",
+    "version": "v0.4.2",
 }
