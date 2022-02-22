@@ -11,14 +11,14 @@ This script was written to track internet speed using Ookla's speed test.
 
 This repository contains everything necessary to build your own Speedtest dashboard (Python script, SQLite database, Grafana dashboard).
 
-Total application size is less than 400MB!  ~276MB for Grafana; ~95MB for Python/SQLite
+Total application size is less than 400MB!  ~276MB for Grafana; ~104MB for Python/SQLite
 
 Dashboard and Database data is persistent through the use of Docker Volumes.
 
 ### Prerequisites
-* Docker; Verified to work with Docker version 20.10.12
-* Docker Compose; Verified to work with Docker Compose version 2.2.3 (Will not work with version 1.X.)
-* Docker host must be able to access Docker Hub
+* Docker; Verified to work with Docker version 20.10.12.
+* Docker Compose; Verified to work with Docker Compose version 2.2.3 (Will not work with version 1.X.).
+* Docker host must be able to access Docker Hub.
 
 #### Python Libraries
 * See [pyproject.toml](pyproject.toml)
@@ -32,6 +32,8 @@ Dashboard and Database data is persistent through the use of Docker Volumes.
 
 #### Docker Commands
 
+_(All Docker commands must be run from the cloned directory or you must specify the path and filename to docker-compose.yml.)_
+
 * To pull/build the necessary Docker images:
 `docker-compose build`
 
@@ -42,10 +44,10 @@ Dashboard and Database data is persistent through the use of Docker Volumes.
 `docker-compose down`
 
 * To wipe out your dashboard data:
-`docker-compose down` followed by `yes | docker volume prune`
+`docker-compose down` followed by `docker volume rm speedtest_aio_grafana-storage` and `docker volume rm speedtest_aio_speedtest-storage`
 
 * To remove intermediate build images (no longer required after `docker-compose build`):
-`yes | docker image prune --filter "label=prune=true"`
+`docker image prune --filter "label=prune=true"`
 
 #### Grafana
 

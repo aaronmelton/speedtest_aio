@@ -1,4 +1,47 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_SPEEDTEST_DATABASE",
+      "label": "Speedtest Database",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "frser-sqlite-datasource",
+      "pluginName": "SQLite"
+    }
+  ],
+  "__elements": [],
+  "__requires": [
+    {
+      "type": "datasource",
+      "id": "frser-sqlite-datasource",
+      "name": "SQLite",
+      "version": "2.2.1"
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "8.4.1"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -21,7 +64,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": null,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -105,7 +148,7 @@
         {
           "datasource": {
             "type": "frser-sqlite-datasource",
-            "uid": "P7B5A896714916120"
+            "uid": "${DS_SPEEDTEST_DATABASE}"
           },
           "hide": false,
           "queryText": "SELECT\n  timestamp AS \"time\",\n  download AS \"Download Throughput\"\nFROM speedtest\nORDER BY timestamp",
@@ -120,7 +163,7 @@
         {
           "datasource": {
             "type": "frser-sqlite-datasource",
-            "uid": "P7B5A896714916120"
+            "uid": "${DS_SPEEDTEST_DATABASE}"
           },
           "hide": false,
           "queryText": "SELECT\n  timestamp AS \"time\",\n  upload AS \"Upload Throughput\"\nFROM speedtest\nORDER BY timestamp",
@@ -181,12 +224,12 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.4.0",
+      "pluginVersion": "8.4.1",
       "targets": [
         {
           "datasource": {
             "type": "frser-sqlite-datasource",
-            "uid": "P7B5A896714916120"
+            "uid": "${DS_SPEEDTEST_DATABASE}"
           },
           "hide": false,
           "queryText": "SELECT\n  timestamp AS \"time\",\n  max(download) AS \"Max\"\nFROM speedtest\nORDER BY timestamp",
@@ -201,7 +244,7 @@
         {
           "datasource": {
             "type": "frser-sqlite-datasource",
-            "uid": "P7B5A896714916120"
+            "uid": "${DS_SPEEDTEST_DATABASE}"
           },
           "hide": false,
           "queryText": "SELECT\n  timestamp AS \"time\",\n  min(download) AS \"Min\"\nFROM speedtest\nORDER BY timestamp",
@@ -216,7 +259,7 @@
         {
           "datasource": {
             "type": "frser-sqlite-datasource",
-            "uid": "P7B5A896714916120"
+            "uid": "${DS_SPEEDTEST_DATABASE}"
           },
           "hide": false,
           "queryText": "SELECT\n  timestamp AS \"time\",\n  avg(download) AS \"Average\"\nFROM speedtest\nORDER BY timestamp",
@@ -278,12 +321,12 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.4.0",
+      "pluginVersion": "8.4.1",
       "targets": [
         {
           "datasource": {
             "type": "frser-sqlite-datasource",
-            "uid": "P7B5A896714916120"
+            "uid": "${DS_SPEEDTEST_DATABASE}"
           },
           "hide": false,
           "queryText": "SELECT\n  timestamp AS \"time\",\n  max(upload) AS \"Max\"\nFROM speedtest\nORDER BY timestamp",
@@ -298,7 +341,7 @@
         {
           "datasource": {
             "type": "frser-sqlite-datasource",
-            "uid": "P7B5A896714916120"
+            "uid": "${DS_SPEEDTEST_DATABASE}"
           },
           "hide": false,
           "queryText": "SELECT\n  timestamp AS \"time\",\n  min(upload) AS \"Min\"\nFROM speedtest\nORDER BY timestamp",
@@ -313,7 +356,7 @@
         {
           "datasource": {
             "type": "frser-sqlite-datasource",
-            "uid": "P7B5A896714916120"
+            "uid": "${DS_SPEEDTEST_DATABASE}"
           },
           "hide": false,
           "queryText": "SELECT\n  timestamp AS \"time\",\n  avg(upload) AS \"Average\"\nFROM speedtest\nORDER BY timestamp",
@@ -426,7 +469,7 @@
         {
           "datasource": {
             "type": "frser-sqlite-datasource",
-            "uid": "P7B5A896714916120"
+            "uid": "${DS_SPEEDTEST_DATABASE}"
           },
           "queryText": "SELECT\n  timestamp AS \"time\",\n  ping\nFROM speedtest\nORDER BY timestamp",
           "queryType": "table",
@@ -486,12 +529,12 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.4.0",
+      "pluginVersion": "8.4.1",
       "targets": [
         {
           "datasource": {
             "type": "frser-sqlite-datasource",
-            "uid": "P7B5A896714916120"
+            "uid": "${DS_SPEEDTEST_DATABASE}"
           },
           "queryText": "SELECT\n  timestamp AS \"time\",\n  min(ping) AS \"Best\"\nFROM speedtest\nORDER BY timestamp",
           "queryType": "table",
@@ -505,7 +548,7 @@
         {
           "datasource": {
             "type": "frser-sqlite-datasource",
-            "uid": "P7B5A896714916120"
+            "uid": "${DS_SPEEDTEST_DATABASE}"
           },
           "hide": false,
           "queryText": "SELECT\n  timestamp AS \"time\",\n  max(ping) AS \"Worst\"\nFROM speedtest\nORDER BY timestamp",
@@ -520,7 +563,7 @@
         {
           "datasource": {
             "type": "frser-sqlite-datasource",
-            "uid": "P7B5A896714916120"
+            "uid": "${DS_SPEEDTEST_DATABASE}"
           },
           "hide": false,
           "queryText": "SELECT\n  timestamp AS \"time\",\n  avg(ping) AS \"Average\"\nFROM speedtest\nORDER BY timestamp",
@@ -671,18 +714,24 @@
           ],
           "show": false
         },
-        "showHeader": true
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "time"
+          }
+        ]
       },
-      "pluginVersion": "8.4.0",
+      "pluginVersion": "8.4.1",
       "targets": [
         {
           "datasource": {
             "type": "frser-sqlite-datasource",
-            "uid": "P7B5A896714916120"
+            "uid": "${DS_SPEEDTEST_DATABASE}"
           },
-          "queryText": "SELECT\n  timestamp AS \"time\", download, upload, ping, server_id, server_host\nFROM speedtest\nORDER BY timestamp",
+          "queryText": "SELECT\n  timestamp AS \"time\", download, upload, ping, server_id, server_host\nFROM speedtest\nORDER BY timestamp DESC",
           "queryType": "table",
-          "rawQueryText": "SELECT\n  timestamp AS \"time\", download, upload, ping, server_id, server_host\nFROM speedtest\nORDER BY timestamp",
+          "rawQueryText": "SELECT\n  timestamp AS \"time\", download, upload, ping, server_id, server_host\nFROM speedtest\nORDER BY timestamp DESC",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -701,7 +750,7 @@
     "list": []
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {},

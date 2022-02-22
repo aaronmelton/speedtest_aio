@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [0.4.1] - 2022-02-22
+### Changed
+- Dockerfile-speedtest: Added prune label to the base image build.
+- grafana/grafana_dashboard.json: Sorting test list by descending time.
+- README.md: Improved instructions for Docker operation.
+- speedtest_monitor.png: New screenshot to reflect new layout.
+
 ## [0.4.0] - 2022-02-21
 ### Changed
 - docker-compose.yml: Updating paths to match changes in application.

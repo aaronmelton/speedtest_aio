@@ -3,6 +3,7 @@
 ##################
 
 ARG PYTHON_VER=3.10
+LABEL prune=true
 
 FROM python:${PYTHON_VER}-alpine AS base
 
