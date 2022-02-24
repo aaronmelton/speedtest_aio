@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.4.3] - 2022-02-23
+### Changed
+- Dockerfile-speedtest: Put prune label in the wrong place.
+
 ## [0.4.2] - 2022-02-22
 ### Changed
 - README.md: Improved spacing for Docker commands.

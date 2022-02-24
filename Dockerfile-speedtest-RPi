@@ -3,6 +3,7 @@
 ##################
 
 ARG PYTHON_VER=3.10
+LABEL prune=true
 
 # Need to use the Buster image for Raspberry Pis
 FROM python:${PYTHON_VER}-buster AS base
@@ -24,6 +25,7 @@ RUN /root/.poetry/bin/poetry install --no-dev
 ##################
 
 FROM base AS test
+LABEL prune=true
 
 RUN /root/.poetry/bin/poetry install
 
