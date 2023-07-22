@@ -3,10 +3,10 @@
 ##################
 
 ARG PYTHON_VER=3.10
-LABEL prune=true
 
 # Need to use the Buster image for Raspberry Pis
 FROM python:${PYTHON_VER}-buster AS base
+LABEL prune=true
 
 WORKDIR /app/
 
@@ -52,18 +52,39 @@ FROM python:${PYTHON_VER}-slim-buster
 
 ARG PYTHON_VER
 
-RUN apt-get update && apt-get install --no-install-recommends -y cron curl && \
+RUN apt-get update && apt-get install --no-install-recommends -y curl && \
     apt-get clean
+
+# To maintain consistency with the non-RPi setup, we will need to install
+# supercronic from GitHub
+ENV SUPERCRONIC_URL=https://github.com/aptible/supercronic/releases/download/v0.1.12/supercronic-linux-arm \
+    SUPERCRONIC=supercronic-linux-arm \
+    SUPERCRONIC_SHA1SUM=d72d3d40065c0188b3f1a0e38fe6fecaa098aad5
+
+RUN curl -fsSLO "$SUPERCRONIC_URL" \
+ && echo "${SUPERCRONIC_SHA1SUM}  ${SUPERCRONIC}" | sha1sum -c - \
+ && chmod +x "$SUPERCRONIC" \
+ && mv "$SUPERCRONIC" "/usr/bin/${SUPERCRONIC}" \
+ && ln -s "/usr/bin/${SUPERCRONIC}" /usr/bin/supercronic
+
+RUN ln -snf /usr/share/zoneinfo/UTC /etc/localtime
 
 # Install Speedtest CLI
-RUN curl -s https://install.speedtest.net/app/cli/install.deb.sh | bash
-RUN apt-get update && apt-get install --no-install-recommends -y speedtest && \
-    apt-get clean
+RUN pip install speedtest-cli
 
-COPY crontab /etc/cron.d/
-RUN chmod 0644 /etc/cron.d/crontab
-RUN /usr/bin/crontab /etc/cron.d/crontab
+WORKDIR /app
 
+COPY entrypoint.sh /run/
+RUN chmod 755 /run/entrypoint.sh
+
+RUN addgroup docker && adduser --system --shell /bin/false --disabled-password --no-create-home docker --ingroup docker
+
+COPY crontab /app/
 COPY speedtest_aio/*.py /app/
+RUN mkdir -p /app/db
+RUN mkdir -p /app/log/
+RUN chown -R docker:docker /app
 
-CMD ["cron", "-f"]
+USER docker
+
+ENTRYPOINT ["/run/entrypoint.sh"]

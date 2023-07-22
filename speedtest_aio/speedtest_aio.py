@@ -8,8 +8,8 @@ import logging
 import sqlite3
 import subprocess
 import sys
+import time
 from datetime import date, datetime
-from time import time
 
 from config import app_dict
 
@@ -155,7 +155,7 @@ def main():
     -------
     None
     """
-    start_time = time()
+    start_time = time.perf_counter()
 
     # Setup Logging Functionality
     logging.basicConfig(
@@ -218,7 +218,7 @@ def main():
     else:
         logger.error("Error running speed test.")
 
-    logger.info("Total Execution Time: %s seconds", time() - start_time)
+    logger.info("Total Execution Time: %s seconds", time.perf_counter() - start_time)
     logger.info("STOP STOP STOP")
     return 0
 
