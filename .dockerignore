@@ -1,0 +1,17 @@
+**/*.log*
+**/*.tar.gz
+**/*.txt
+**/.DS_Store
+**/.coverage
+**/.env
+**/.pytest_cache
+**/__pycache__/
+**/bin/
+**/include/
+**/lib/
+**/lib64
+**/run*.sh
+.git/
+.gitignore
+Dockerfile
+docker-compose*.yml

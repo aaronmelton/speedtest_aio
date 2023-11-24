@@ -1,5 +1,30 @@
 # CHANGELOG
 
+## [0.5.0] - 2023-11-24
+### Fixed
+- grafana/grafana_dashboard.json: Updated dashboard JSON which should fix
+  Issues #2 and #4.
+### Added
+- .dockerignore: If we're building Docker Images, we should probably have
+  one of these...
+- tests/test_class_Config.py: Poor excuse for a unit test file.
+### Changed
+- .gitignore: Updating project-specific files.
+- docker-compose.yml: Switching default speedtest_aio Docker file from
+  Dockerfile-speedtest-RPi to Dockerfile-speedtest. 
+- Dockerfile-grafana: Pinning to version 10.2.2.
+- Dockerfile-speedtest: Switching Docker image from Alpine to Python because
+  it's easier to work with.
+- entrypoint.sh: Correcting path for Supercronic bin.
+- README.md: Minor clarification to the instructions.
+- pyproject.toml: Bumped Python to v3.12; Python functions consolidated into
+  a new code repository, aaron-common-libs, which is now imported into this
+  script; speedtest-cli is now installed via Poetry; Bumped all development
+  test packages to latest versions.
+- speedtest_aio/config.py, speedtest_aio/speedtest_aio.py: Refactored most
+  functions: Config, logging setup, SQL calls.
+
+
 ## [0.4.4] - 2022-02-23
 ### Changed
 - Improving functionality that times app from using time.time() to 
