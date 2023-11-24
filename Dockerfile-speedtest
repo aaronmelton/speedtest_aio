@@ -1,56 +1,80 @@
+ARG PYTHON_VER=3.12
+ARG REPO_NAME=speedtest_aio
+
 ##################
 ### BASE IMAGE ###
 ##################
 
-ARG PYTHON_VER=3.10
+FROM python:${PYTHON_VER} AS base
 
-FROM python:${PYTHON_VER}-alpine AS base
-LABEL prune=true
+ARG REPO_NAME
+LABEL name=${REPO_NAME} prune=true
 
 WORKDIR /app
 
-RUN apk --update add gcc build-base libffi-dev
-RUN pip install poetry
+RUN pip install --no-cache-dir poetry
 RUN poetry config virtualenvs.create false
 
 COPY pyproject.toml .
 
-RUN poetry install --no-dev
+RUN poetry install --only main
 
 ##################
 ### TEST IMAGE ###
 ##################
 
 FROM base AS test
-LABEL prune=true
+
+ARG REPO_NAME
+LABEL name=${REPO_NAME} prune=true
+
+WORKDIR /app
+
+COPY pyproject.toml .
+COPY tests/ tests/
+COPY speedtest_aio/ speedtest_aio/
 
 RUN poetry install
 
-COPY . .
-
-RUN echo '-->Running Flake8' && \
-    flake8 . && \
+RUN echo '-->Running Flake8p' && \
+    flake8p --config pyproject.toml . && \
     echo '-->Running Black' && \
-    black --check --diff . && \
+    black --config pyproject.toml --check --diff . && \
     echo '-->Running isort' && \
-    find . -name '*.py' | xargs isort && \
+    find . -name '*.py' -not -path '*/tests/*' | xargs isort --profile black --skip tests/ && \
     echo '-->Running Pylint' && \
     find . -name '*.py' | xargs pylint --rcfile=pyproject.toml && \
     echo '-->Running pydocstyle' && \
     pydocstyle . --config=pyproject.toml && \
     echo '-->Running Bandit' && \
-    bandit --recursive ./ --configfile pyproject.toml
+    bandit --recursive ./ --configfile pyproject.toml && \
+    echo '-->Running pytest' && \
+    coverage run -m pytest --color=yes -vvv && \
+    echo '-->Running coverage' && \
+    coverage report
 
 ###################
 ### FINAL IMAGE ###
 ###################
 
-FROM python:${PYTHON_VER}-alpine
+FROM python:${PYTHON_VER}-slim AS cli
 
 ARG PYTHON_VER
 
-RUN apk --update add busybox-suid speedtest-cli supercronic
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y curl && \
+    apt-get clean
 
+# Latest releases available at https://github.com/aptible/supercronic/releases
+ENV SUPERCRONIC_URL=https://github.com/aptible/supercronic/releases/download/v0.2.27/supercronic-linux-amd64 \
+    SUPERCRONIC=supercronic-linux-amd64 \
+    SUPERCRONIC_SHA1SUM=7dadd4ac827e7bd60b386414dfefc898ae5b6c63
+
+RUN curl -fsSLO "$SUPERCRONIC_URL" \
+ && echo "${SUPERCRONIC_SHA1SUM}  ${SUPERCRONIC}" | sha1sum -c - \
+ && chmod +x "$SUPERCRONIC" \
+ && mv "$SUPERCRONIC" "/usr/local/bin/${SUPERCRONIC}" \
+ && ln -s "/usr/local/bin/${SUPERCRONIC}" /usr/local/bin/supercronic
 RUN ln -snf /usr/share/zoneinfo/UTC /etc/localtime
 
 WORKDIR /app
@@ -58,10 +82,14 @@ WORKDIR /app
 COPY entrypoint.sh /run/
 RUN chmod 755 /run/entrypoint.sh
 
-RUN addgroup docker && adduser -s /bin/false -S -D -H docker -G docker
+RUN addgroup docker && adduser --system --shell /bin/false --disabled-password --no-create-home docker --ingroup docker
+
+COPY --from=base /usr/local/lib/python${PYTHON_VER}/site-packages /usr/local/lib/python${PYTHON_VER}/site-packages
+COPY --from=base /usr/local/bin /usr/local/bin
 
 COPY crontab /app/
 COPY speedtest_aio/*.py /app/
+
 RUN mkdir -p /app/db
 RUN mkdir -p /app/log/
 RUN chown -R docker:docker /app

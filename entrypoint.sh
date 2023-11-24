@@ -5,4 +5,4 @@
 /usr/local/bin/python /app/speedtest_aio.py
 
 # Using Supercronic to run crontab as docker user
-/usr/bin/supercronic /app/crontab
+/usr/local/bin/supercronic /app/crontab

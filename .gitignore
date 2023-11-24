@@ -1,7 +1,5 @@
 # Project files
-*.sublime-*
-speedtest_aio/run.sh
-speedtest_aio/speedtest
+.idea
 
 # Byte-compiled / optimized / DLL files
 **/__pycache__/

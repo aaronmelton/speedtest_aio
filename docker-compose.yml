@@ -3,7 +3,7 @@ services:
   speedtest_aio:
     build:
       context: .
-      dockerfile: Dockerfile-speedtest-RPi
+      dockerfile: Dockerfile-speedtest
     image: speedtest_aio:latest
     volumes:
       - speedtest-storage:/app/db

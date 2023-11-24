@@ -1,4 +1,4 @@
-FROM grafana/grafana:latest
+FROM grafana/grafana:10.2.2
 
 COPY --chown=grafana:root grafana/datasource.yml /etc/grafana/provisioning/datasources/
 COPY --chown=grafana:root grafana/dashboard.yml /etc/grafana/provisioning/dashboards/
