@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.5.1] - 2023-11-26
+### Changed
+- pyproject.toml: Rolling back Python version to 3.11.  v3.12 not in widespread
+  use yet...
+
+
 ## [0.5.0] - 2023-11-24
 ### Fixed
 - grafana/grafana_dashboard.json: Updated dashboard JSON which should fix
