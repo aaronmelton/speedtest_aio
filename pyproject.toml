@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "speedtest_aio"
-version = "0.5.0"
+version = "0.5.1"
 description = "A Python script to capture speedtest JSON and insert it into a database."
 authors = ["Aaron Melton <aaron@aaronmelton.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.11"
 aaron-common-libs = {git = "https://github.com/aaronmelton/aaron-common-libs.git"}
 speedtest-cli = "^2.1.3"
 
