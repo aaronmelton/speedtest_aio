@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [0.5.2] - 2024-05-10
+### Changed
+- Bumping Python to 3.12 and updating all library versions.
+
+
 ## [0.5.0] - 2023-11-24
 ### Fixed
 - grafana/grafana_dashboard.json: Updated dashboard JSON which should fix
