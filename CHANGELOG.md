@@ -1,6 +1,12 @@
 # CHANGELOG
 
-## [0.6.0] - 2024-05-10
+## [0.6.1] - 2024-05-17
+### Fixed
+- Added secure option to the speedtest command.  (This is why we can't have
+  nice things.)
+
+
+## [0.6.0] - 2024-05-17
 ### Added
 - docker-compose-RPi.yml: Adding file specifically for use with Raspberry Pis.
 ### Changed
