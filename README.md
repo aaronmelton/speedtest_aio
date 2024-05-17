@@ -60,8 +60,9 @@ _(All Docker commands must be run from the cloned directory or you must specify 
 If you are installing this Docker image on a Raspberry Pi, you will need to use
 the `Dockerfile-speedtest-RPi` created specifically for this purpose.
 
-Edit the `docker-compose.yml` file and change the line from `dockerfile: Dockerfile-speedtest` 
-to `dockerfile: Dockerfile-speedtest-RPi` before continuing with your `docker-compose build`.
+Add `-f docker-compose-RPi.yml` to your docker-compose commands.  For example:
+
+`docker-compose -f docker-compose-RPi.yml build`
 
 ## Acknowledgements
 * Grafana dashboard layout borrowed from [speedtest_exporter](https://github.com/danopstech/speedtest_exporter).
