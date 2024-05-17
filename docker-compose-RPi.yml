@@ -1,18 +1,18 @@
 services:
-  speedtest_aio:
+  speedtest_aio_rpi:
     build:
       context: .
-      dockerfile: Dockerfile-speedtest
-    image: speedtest_aio:latest
+      dockerfile: Dockerfile-speedtest-RPi
+    image: speedtest_aio_rpi:latest
     volumes:
-      - speedtest-storage:/app/db
-    container_name: speedtest_aio
+      - speedtest-storage-rpi:/app/db
+    container_name: speedtest_aio_rpi
     network_mode: "bridge"
-  speedtest_grafana:
+  speedtest_grafana_rpi:
     build:
       context: .
       dockerfile: Dockerfile-grafana
-    image: speedtest_grafana:latest
+    image: speedtest_grafana_rpi:latest
     environment:
       - GF_PATHS_CONFIG=/etc/grafana/grafana.ini
       - GF_PATHS_DATA=/var/lib/grafana
@@ -22,14 +22,14 @@ services:
       - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
       - GF_INSTALL_PLUGINS=frser-sqlite-datasource
     volumes:
-      - grafana-storage:/var/lib/grafana
-      - speedtest-storage:/app/db
+      - grafana-storage-rpi:/var/lib/grafana
+      - speedtest-storage-rpi:/app/db
     depends_on:
-      - speedtest_aio
-    container_name: speedtest_grafana
+      - speedtest_aio_rpi
+    container_name: speedtest_grafana_rpi
     network_mode: "bridge"
     ports:
       - "3000:3000"
 volumes:
-  speedtest-storage:
-  grafana-storage:
+  speedtest-storage-rpi:
+  grafana-storage-rpi:

@@ -1,9 +1,17 @@
 # CHANGELOG
 
-
-## [0.5.2] - 2024-05-10
+## [0.6.0] - 2024-05-10
+### Added
+- docker-compose-RPi.yml: Adding file specifically for use with Raspberry Pis.
 ### Changed
 - Bumping Python to 3.12 and updating all library versions.
+- Dockerfile-grafana: Updating grafana 10.2.2 -> 10.2.7
+- Dockerfile-speedtest: Updating supercronic 0.2.27 -> 0.2.29
+- Dockerfile-speedtest-RPi: Updating Debian buster -> bookworm;
+  supercronic 0.2.27 -> 0.2.29; Bringing this file more in line with
+  Dockerfile-speedtest.
+- README.md: Updating instructions for using Raspberry Pi Dockerfile.
+- docker-compose.yml: Removed deprecated version statement.
 
 
 ## [0.5.1] - 2023-11-26

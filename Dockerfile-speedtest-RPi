@@ -1,77 +1,80 @@
+ARG PYTHON_VER=3.12
+ARG REPO_NAME=speedtest_aio
+
 ##################
 ### BASE IMAGE ###
 ##################
 
-ARG PYTHON_VER=3.10
+FROM python:${PYTHON_VER}-bookworm AS base
 
-# Need to use the Buster image for Raspberry Pis
-FROM python:${PYTHON_VER}-buster AS base
-LABEL prune=true
+ARG REPO_NAME
+LABEL name=${REPO_NAME} prune=true
 
-WORKDIR /app/
+WORKDIR /app
 
-# Poetry from the repo doesn't work for whatever reason so we'll install
-# directly from the source and update all poetry commands to use the path
-# to the new poetry
-RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
-RUN /root/.poetry/bin/poetry config virtualenvs.create false
+RUN pip install --no-cache-dir poetry
+RUN poetry config virtualenvs.create false
 
 COPY pyproject.toml .
 
-RUN /root/.poetry/bin/poetry install --no-dev
+RUN poetry install --only main
 
 ##################
 ### TEST IMAGE ###
 ##################
 
 FROM base AS test
-LABEL prune=true
+
+ARG REPO_NAME
+LABEL name=${REPO_NAME} prune=true
+
+WORKDIR /app
+
+COPY pyproject.toml .
+COPY tests/ tests/
+COPY speedtest_aio/ speedtest_aio/
 
 RUN /root/.poetry/bin/poetry install
 
-COPY . .
-
-RUN echo '-->Running Flake8' && \
-    flake8 . && \
+RUN echo '-->Running Flake8p' && \
+    flake8p --config pyproject.toml . && \
     echo '-->Running Black' && \
-    black --check --diff . && \
+    black --config pyproject.toml --check --diff . && \
     echo '-->Running isort' && \
-    find . -name '*.py' | xargs isort && \
+    find . -name '*.py' -not -path '*/tests/*' | xargs isort --profile black --skip tests/ && \
     echo '-->Running Pylint' && \
     find . -name '*.py' | xargs pylint --rcfile=pyproject.toml && \
     echo '-->Running pydocstyle' && \
     pydocstyle . --config=pyproject.toml && \
     echo '-->Running Bandit' && \
-    bandit --recursive ./ --configfile pyproject.toml
+    bandit --recursive ./ --configfile pyproject.toml && \
+    echo '-->Running pytest' && \
+    coverage run -m pytest --color=yes -vvv && \
+    echo '-->Running coverage' && \
+    coverage report
 
 ###################
 ### FINAL IMAGE ###
 ###################
 
-FROM python:${PYTHON_VER}-slim-buster
+FROM python:${PYTHON_VER}-slim-bookworm
 
 ARG PYTHON_VER
 
-RUN apt-get update && apt-get install --no-install-recommends -y curl && \
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y curl && \
     apt-get clean
 
-# To maintain consistency with the non-RPi setup, we will need to install
-# supercronic from GitHub
-ENV SUPERCRONIC_URL=https://github.com/aptible/supercronic/releases/download/v0.1.12/supercronic-linux-arm \
+# Latest releases available at https://github.com/aptible/supercronic/releases
+ENV SUPERCRONIC_URL=https://github.com/aptible/supercronic/releases/download/v0.2.29/supercronic-linux-arm \
     SUPERCRONIC=supercronic-linux-arm \
-    SUPERCRONIC_SHA1SUM=d72d3d40065c0188b3f1a0e38fe6fecaa098aad5
+    SUPERCRONIC_SHA1SUM=75e065bf0909f920b06d5bd797c0e6b31e68b112
 
 RUN curl -fsSLO "$SUPERCRONIC_URL" \
  && echo "${SUPERCRONIC_SHA1SUM}  ${SUPERCRONIC}" | sha1sum -c - \
  && chmod +x "$SUPERCRONIC" \
- && mv "$SUPERCRONIC" "/usr/bin/${SUPERCRONIC}" \
- && ln -s "/usr/bin/${SUPERCRONIC}" /usr/bin/supercronic
-
-RUN ln -snf /usr/share/zoneinfo/UTC /etc/localtime
-
-# Install Speedtest CLI
-RUN pip install speedtest-cli
-
+ && mv "$SUPERCRONIC" "/usr/local/bin/${SUPERCRONIC}" \
+ && ln -s "/usr/local/bin/${SUPERCRONIC}" /usr/local/bin/supercronic
 WORKDIR /app
 
 COPY entrypoint.sh /run/
@@ -79,8 +82,12 @@ RUN chmod 755 /run/entrypoint.sh
 
 RUN addgroup docker && adduser --system --shell /bin/false --disabled-password --no-create-home docker --ingroup docker
 
+COPY --from=base /usr/local/lib/python${PYTHON_VER}/site-packages /usr/local/lib/python${PYTHON_VER}/site-packages
+COPY --from=base /usr/local/bin /usr/local/bin
+
 COPY crontab /app/
 COPY speedtest_aio/*.py /app/
+
 RUN mkdir -p /app/db
 RUN mkdir -p /app/log/
 RUN chown -R docker:docker /app
