@@ -1,5 +1,11 @@
 # CHANGELOG
 
+
+## [0.5.2] - 2024-05-10
+### Changed
+- Bumping Python to 3.12 and updating all library versions.
+
+
 ## [0.5.1] - 2023-11-26
 ### Changed
 - pyproject.toml: Rolling back Python version to 3.11.  v3.12 not in widespread
