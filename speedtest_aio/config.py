@@ -21,7 +21,7 @@ class Config:  # pylint: disable=too-many-instance-attributes
             "desc": "A Python script to capture speedtest JSON and insert it into a database.",
             "title": "speedtest_aio",
             "url": "https://github.com/aaronmelton/speedtest_aio",
-            "version": "0.6.0",
+            "version": "0.6.1",
         }
 
         # Logging Variables
