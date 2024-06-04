@@ -34,7 +34,7 @@ COPY pyproject.toml .
 COPY tests/ tests/
 COPY speedtest_aio/ speedtest_aio/
 
-RUN /root/.poetry/bin/poetry install
+RUN poetry install
 
 RUN echo '-->Running Flake8p' && \
     flake8p --config pyproject.toml . && \

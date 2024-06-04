@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [0.6.2] - 2024-06-04
+### Fixed
+- Dockerfile-speedtest-RPi: Incorrect path specified for poetry install in test image.
+
+
 ## [0.6.1] - 2024-05-17
 ### Fixed
 - Added secure option to the speedtest command.  (This is why we can't have
