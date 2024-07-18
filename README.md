@@ -1,19 +1,19 @@
+![speedtest_monitor.png](speedtest_monitor.png)
+
 # Speedtest All-In-One
 
 Automatically capture your Ookla Speedtest metrics and display them in a Grafana dashboard.
 
-![speedtest_monitor.png](speedtest_monitor.png)
-
 ## Getting Started
 
 ### About This Code
-This script was written to track internet speed using Ookla's speed test.
+This script was written to track your Internet speed using Ookla's speed test.
 
-This repository contains everything necessary to build your own Speedtest dashboard (Python script, SQLite database, Grafana dashboard).
+This repository contains everything necessary to build your own Speedtest dashboard: Python script, SQLite database, Grafana dashboard.
 
-Dashboard and Database data is persistent through the use of Docker Volumes.
+Dashboard and database data is persistent through the use of Docker volumes.
 
-### Prerequisites
+#### Requirements
 * Docker; Verified to work with Docker version 24.0.6.
 * Docker Compose; Verified to work with Docker Compose version 2.23.0 (Will not work with version 1.X.).
 * Docker host must be able to access Docker Hub.
@@ -51,7 +51,7 @@ _(All Docker commands must be run from the cloned directory or you must specify 
 `docker image prune --filter "label=prune=true"`
 
 #### Grafana
-* Default username/password is admin/admin.
+* Default username/password is `admin/admin`.
 * You will be prompted to change your password upon first login.
 * Access your Grafana dashboard via [http://localhost:3000](http://localhost:3000) OR replace `localhost` with the IP Address of the host.
 * **WARNING:** This dashboard will be accessible to all hosts in the same subnet!

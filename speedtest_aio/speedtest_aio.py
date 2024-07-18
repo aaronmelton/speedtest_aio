@@ -32,7 +32,6 @@ def create_database(db_filename):
     -------
     output_json : str
     """
-    logger.debug("START")
     logger.debug("db_filename=='%s'", db_filename)
     result = False
     create_file = False
@@ -67,7 +66,6 @@ def create_database(db_filename):
         except Exception as some_exception:  # pylint: disable=broad-except
             logger.error("ERROR creating new database or committing changes.")
             logger.exception("ERROR=='%s'", some_exception)
-    logger.debug("STOP")
     return result
 
 
@@ -84,7 +82,6 @@ def db_query(db_filename, query, some_list):
     -------
     output_json : str
     """
-    logger.debug("START")
     logger.debug("db_filename=='%s'", db_filename)
     logger.debug("query=='%s'", query)
     logger.debug("some_list=='%s'", some_list)
@@ -124,8 +121,6 @@ def db_query(db_filename, query, some_list):
             logger.error("ERROR running query: %s", str(query))
             logger.exception("ERROR=='%s'", some_exception)
     cursor.close()
-
-    logger.debug("STOP")
     return output_json
 
 
