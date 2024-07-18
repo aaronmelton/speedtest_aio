@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "speedtest_aio"
-version = "0.6.2"
+version = "0.6.3"
 description = "A Python script to capture speedtest JSON and insert it into a database."
 authors = ["Aaron Melton <aaron@aaronmelton.com>"]
 
@@ -10,15 +10,15 @@ aaron-common-libs = {git = "https://github.com/aaronmelton/aaron-common-libs.git
 speedtest-cli = "^2.1.3"
 
 [tool.poetry.dev-dependencies]
-bandit = "^1.7.5"
+bandit = "^1.7.8"
 black = "^24.4.2"
-coverage = "^7.3.2"
-flake8 = "^7.0.0"
-isort = "^5.12.0"
+coverage = "^7.6.0"
+flake8 = "^7.1.0"
+isort = "^5.13.2"
 pydocstyle = "^6.3.0"
-pylint = "^3.0.2"
-pytest = "^8.2.0"
-pytest-env = "^1.1.1"
+pylint = "^3.2.5"
+pytest = "^8.2.2"
+pytest-env = "^1.1.3"
 toml = "^0.10.2"
 Flake8-pyproject = "^1.2.3"
 

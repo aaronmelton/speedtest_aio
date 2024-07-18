@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [0.6.3] - 2024-07-18
+### Changed
+- Bumping all Python packages to most recent version.
+### Removed
+- .flake8: No longer required.
+
+
 ## [0.6.2] - 2024-06-04
 ### Fixed
 - Dockerfile-speedtest-RPi: Incorrect path specified for poetry install in test image.
