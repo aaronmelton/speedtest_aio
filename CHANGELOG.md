@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## [0.7.0] - 2025-10-22
+### Changed
+- pyproject.toml: Updated Python version constraint from `>=3.12,<3.13` to `>=3.12,<3.14` to support Python 3.13.
+- pyproject.toml: Migrated from deprecated `[tool.poetry.dev-dependencies]` to `[tool.poetry.group.dev.dependencies]` syntax.
+- pyproject.toml: Updated all Poetry development dependencies to latest versions:
+  - bandit: 1.7.10 -> 1.8.6
+  - coverage: 7.6.4 -> 7.11.0
+  - flake8: 7.1.1 -> 7.3.0
+  - pylint: 3.3.1 -> 3.3.9
+  - pytest: 8.3.3 -> 8.4.2
+  - pytest-env: 1.1.4 -> 1.2.0
+- poetry.lock: Updated all transitive dependencies including certifi, urllib3, pygments, rich, and many others.
+
+
 ## [0.6.3] - 2024-07-18
 ### Changed
 - Bumping all Python packages to most recent version.
