@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## [0.7.1] - 2026-04-22
+### Security
+- pyproject.toml: Bumped `black` dev dependency from `^24.10.0` to `^26.3.1` to resolve Dependabot alert #25 (arbitrary file writes from unsanitized user input in cache file name, high severity).
+- pyproject.toml: Bumped `pytest` dev dependency from `^8.4.2` to `^9.0.3` to resolve Dependabot alert #29 (vulnerable tmpdir handling, medium severity).
+- poetry.lock: Regenerated to pick up patched transitive dependencies, resolving Dependabot alerts:
+  - urllib3 2.5.0 -> 2.6.3 (alerts #19, #21, #22, #23, #24 — decompression-bomb bypass, unbounded decompression chain, streaming-API compression handling, and redirect-control issues).
+  - requests 2.32.5 -> 2.33.1 (alerts #18, #27 — .netrc credentials leak via malicious URLs, insecure temp file reuse in `extract_zipped_paths()`).
+  - Pygments 2.19.2 -> 2.20.0 (alert #28 — ReDoS in GUID-matching regex).
+
+
 ## [0.7.0] - 2025-10-22
 ### Changed
 - pyproject.toml: Updated Python version constraint from `>=3.12,<3.13` to `>=3.12,<3.14` to support Python 3.13.
