@@ -12,12 +12,15 @@ LABEL name=${REPO_NAME} prune=true
 
 WORKDIR /app
 
-RUN pip install --no-cache-dir poetry
-RUN poetry config virtualenvs.create false
+RUN pip install --no-cache-dir uv
 
-COPY pyproject.toml .
+COPY pyproject.toml uv.lock ./
 
-RUN poetry install --only main
+# entrypoint.sh invokes /usr/local/bin/python directly, so main dependencies
+# (and their console-script binaries, e.g. speedtest-cli) must land in the
+# system site-packages rather than a project-local .venv.
+RUN uv export --frozen --no-dev --no-hashes -o requirements.txt && \
+    uv pip install --system --no-cache -r requirements.txt
 
 ##################
 ### TEST IMAGE ###
@@ -30,28 +33,19 @@ LABEL name=${REPO_NAME} prune=true
 
 WORKDIR /app
 
-COPY pyproject.toml .
 COPY tests/ tests/
 COPY speedtest_aio/ speedtest_aio/
 
-RUN poetry install
+RUN uv sync --frozen
 
-RUN echo '-->Running Flake8p' && \
-    flake8p --config pyproject.toml . && \
-    echo '-->Running Black' && \
-    black --config pyproject.toml --check --diff . && \
-    echo '-->Running isort' && \
-    find . -name '*.py' -not -path '*/tests/*' | xargs isort --profile black --skip tests/ && \
-    echo '-->Running Pylint' && \
-    find . -name '*.py' | xargs pylint --rcfile=pyproject.toml && \
-    echo '-->Running pydocstyle' && \
-    pydocstyle . --config=pyproject.toml && \
-    echo '-->Running Bandit' && \
-    bandit --recursive ./ --configfile pyproject.toml && \
+RUN echo '-->Running ruff check' && \
+    uv run ruff check . && \
+    echo '-->Running ruff format' && \
+    uv run ruff format --check . && \
+    echo '-->Running mypy' && \
+    uv run mypy speedtest_aio && \
     echo '-->Running pytest' && \
-    coverage run -m pytest --color=yes -vvv && \
-    echo '-->Running coverage' && \
-    coverage report
+    uv run pytest --color=yes -vvv
 
 ###################
 ### FINAL IMAGE ###
@@ -87,6 +81,7 @@ COPY --from=base /usr/local/bin /usr/local/bin
 
 COPY crontab /app/
 COPY speedtest_aio/*.py /app/
+COPY speedtest_aio/logger/ /app/logger/
 
 RUN mkdir -p /app/db
 RUN mkdir -p /app/log/

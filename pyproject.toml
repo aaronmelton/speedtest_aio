@@ -1,80 +1,58 @@
-[tool.poetry]
+[project]
 name = "speedtest_aio"
-version = "0.7.1"
+version = "0.8.0"
 description = "A Python script to capture speedtest JSON and insert it into a database."
-authors = ["Aaron Melton <aaron@aaronmelton.com>"]
+authors = [
+    { name = "Aaron Melton", email = "aaron@aaronmelton.com" },
+]
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "speedtest-cli>=2.1.3,<3",
+]
 
-[tool.poetry.dependencies]
-python = ">=3.12,<3.14"
-aaron-common-libs = {git = "https://github.com/aaronmelton/aaron-common-libs.git"}
-speedtest-cli = "^2.1.3"
+[dependency-groups]
+dev = [
+    "mypy>=1.13.0",
+    "pre-commit>=4.0.1",
+    "pytest>=9.0.3",
+    "pytest-cov>=6.0.0",
+    "pytest-env>=1.2.0",
+    "ruff>=0.8.0",
+]
 
-[tool.poetry.group.dev.dependencies]
-bandit = "^1.8.6"
-black = "^26.3.1"
-coverage = "^7.11.0"
-flake8 = "^7.3.0"
-isort = "^5.13.2"
-pydocstyle = "^6.3.0"
-pylint = "^3.3.9"
-pytest = "^9.0.3"
-pytest-env = "^1.2.0"
-toml = "^0.10.2"
-Flake8-pyproject = "^1.2.3"
+[tool.uv]
+package = false
 
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.bandit]
-# Ignoring subprocess complaints; Yes, I've counted the cost.
-skips = ['B404', 'B603']
-exclude_dirs = ["./tests/"]
-
-[tool.black]
+[tool.ruff]
 line-length = 120
-include = '\.pyi?$'
-exclude = '''
-        /(
-          \.git
-        | \.tox
-        | \.venv
-        | env/
-        | _build
-        | build
-        | dist
-        )/
-    '''
+target-version = "py312"
 
-[tool.flake8]
-ignore = ['E501', 'W503']
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "S", "D", "UP", "C4", "SIM"]
+ignore = ["E501", "S108", "D203", "D213"]
 
-[tool.isort]
-profile = "black"
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
-[tool.pydocstyle]
-convention = '''google'''
-inherit = false
-match = '''(?!__init__).*\.py'''
-match-dir = '''(?!tests)[^\.].*'''
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "D"]
 
-[tool.pylint.master]
-init-hook = 'import os, sys; sys.path.append(os.path.dirname("speedtest_aio/"));'
-
-[tool.pylint.messages_control]
-disable = '''
-    line-too-long,
-    singleton-comparison,
-    too-many-lines,
-    use-implicit-booleaness-not-comparison
-    '''
-
-[tool.pylint.miscellaneous]
-notes = ''',
-	TODO.md,
-    '''
+[tool.mypy]
+python_version = "3.12"
+mypy_path = "speedtest_aio"
+explicit_package_bases = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
 
 [tool.pytest.ini_options]
-pythonpath = [".","speedtest_aio"]
+testpaths = ["tests"]
+pythonpath = [".", "speedtest_aio"]
 env = ["LOG_LEVEL = DEBUG",
        "LOG_PATH = /tmp/"]
+
+[tool.coverage.run]
+source = ["speedtest_aio"]

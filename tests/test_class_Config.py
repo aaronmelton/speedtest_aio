@@ -3,7 +3,6 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# pylint: disable=invalid-name, duplicate-code
 
 from re import match as re_match
 
