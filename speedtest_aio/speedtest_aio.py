@@ -7,13 +7,12 @@
 import json
 import sqlite3
 import subprocess
-import sys
 from datetime import datetime
 from time import perf_counter
 
-from aaron_common_libs.common_funcs import pretty_print
-from aaron_common_libs.logger.custom_logger import CustomLogger
+from common_funcs import pretty_print
 from config import Config
+from logger.custom_logger import CustomLogger
 
 config = Config()
 logging_handler = CustomLogger(log_dict=config.log_dict)
@@ -21,16 +20,14 @@ logger = logging_handler.default
 logger_all = logging_handler.all
 
 
-def create_database(db_filename):
+def create_database(db_filename: str) -> bool:
     """Check for presence of database.  Create it (and/or table) if necessary.
 
-    Args
-    ----
-    db_filename: str
+    Args:
+        db_filename: Path to the SQLite database file.
 
-    Returns
-    -------
-    output_json : str
+    Returns:
+        True if the database and table exist or were created successfully.
     """
     logger.debug("db_filename=='%s'", db_filename)
     result = False
@@ -63,24 +60,22 @@ def create_database(db_filename):
             logger.info("Database created successfully!")
             database_connection.close()
             result = True
-        except Exception as some_exception:  # pylint: disable=broad-except
+        except Exception as some_exception:
             logger.error("ERROR creating new database or committing changes.")
             logger.exception("ERROR=='%s'", some_exception)
     return result
 
 
-def db_query(db_filename, query, some_list):
+def db_query(db_filename: str, query: str, some_list: list | None) -> list:
     """Query database and return results.
 
-    Args
-    ----
-    db_filename : str
-    query : str
-    some_list : dict
+    Args:
+        db_filename: Path to the SQLite database file.
+        query: SQL query to run.
+        some_list: Values to bind to the query when writing; None when reading.
 
-    Returns
-    -------
-    output_json : str
+    Returns:
+        Rows returned by the query, or an empty list when writing.
     """
     logger.debug("db_filename=='%s'", db_filename)
     logger.debug("query=='%s'", query)
@@ -95,15 +90,15 @@ def db_query(db_filename, query, some_list):
                 logger.info("Writing changes to database...")
                 cursor.execute(query, some_list)
                 logger.info("Database write successful.")
-            except Exception as some_exception:  # pylint: disable=broad-except
+            except Exception as some_exception:
                 logger.error("ERROR running query.")
                 logger.exception("ERROR=='%s'", some_exception)
             try:
                 database_connection.commit()
-            except Exception as some_exception:  # pylint: disable=broad-except
+            except Exception as some_exception:
                 logger.exception("ERROR=='%s'", some_exception)
                 logger.error("ERROR committing changes.")
-        except Exception as some_exception:  # pylint: disable=broad-except
+        except Exception as some_exception:
             logger.error("ERROR running query: %s", str(query))
             logger.exception("ERROR=='%s'", some_exception)
 
@@ -117,23 +112,15 @@ def db_query(db_filename, query, some_list):
             cursor.execute(query)
             output_json = cursor.fetchall()
             logger.info("Database query successful.")
-        except Exception as some_exception:  # pylint: disable=broad-except
+        except Exception as some_exception:
             logger.error("ERROR running query: %s", str(query))
             logger.exception("ERROR=='%s'", some_exception)
     cursor.close()
     return output_json
 
 
-def main():
-    """Main Function.
-
-    Args
-    ----
-
-    Returns
-    -------
-    None
-    """
+def main() -> None:
+    """Run a speedtest and record the results in the database."""
     start_time = perf_counter()
 
     logger.info("")
@@ -151,7 +138,7 @@ def main():
         speedtest_results = json.loads(process.stdout.decode("utf-8"))
         logger.debug("speedtest_results==%s", pretty_print(speedtest_results))
         logger.info("Speedtest run successfully.")
-    except Exception as some_exception:  # pylint: disable=broad-except
+    except Exception as some_exception:
         speedtest_results = None
         logger.error("ERROR running speed test.")
         logger.exception("EXCEPTION='%s'", str(some_exception))
@@ -177,7 +164,7 @@ def main():
             speedtest_values = [int(x) if isinstance(x, bool) else x for x in speedtest_list.values()]
             try:
                 db_query(db_filename=database_filename, query=this_query, some_list=speedtest_values)
-            except Exception as some_exception:  # pylint: disable=broad-except
+            except Exception as some_exception:
                 logger.error("ERROR running db_query")
                 logger.exception("EXCEPTION='%s'", str(some_exception))
     else:
@@ -189,4 +176,4 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

@@ -13,5 +13,6 @@
 **/run*.sh
 .git/
 .gitignore
+.venv/
 Dockerfile
 docker-compose*.yml
