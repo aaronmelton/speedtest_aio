@@ -7,8 +7,10 @@
 import json
 import sqlite3
 import subprocess
+from collections.abc import Sequence
 from datetime import datetime
 from time import perf_counter
+from typing import Any
 
 from common_funcs import pretty_print
 from config import Config
@@ -37,7 +39,7 @@ def create_database(db_filename: str) -> bool:
     # the sqlite3.connect() will create it.  We do need to check for the table.
     logger.info("Database file exists; Checking for correct table...")
     this_query = """SELECT name FROM sqlite_master WHERE type='table' AND name='speedtest'"""
-    check_table = db_query(db_filename=db_filename, query=this_query, some_list=None)
+    check_table = db_query(db_filename=db_filename, query=this_query, params=None)
     if not check_table:
         logger.warning("Database table not found.")
         create_file = True
@@ -66,29 +68,32 @@ def create_database(db_filename: str) -> bool:
     return result
 
 
-def db_query(db_filename: str, query: str, some_list: list | None) -> list:
+def db_query(db_filename: str, query: str, params: dict[str, Any] | Sequence[Any] | None) -> list:
     """Query database and return results.
 
     Args:
         db_filename: Path to the SQLite database file.
         query: SQL query to run.
-        some_list: Values to bind to the query when writing; None when reading.
+        params: Values to bind to the query when writing; None when reading. A dict
+            binds to named placeholders (:name), a sequence binds to positional ones (?).
+            The two must not be mixed -- passing a sequence to a named-placeholder query
+            raises sqlite3.ProgrammingError on Python 3.14.
 
     Returns:
         Rows returned by the query, or an empty list when writing.
     """
     logger.debug("db_filename=='%s'", db_filename)
     logger.debug("query=='%s'", query)
-    logger.debug("some_list=='%s'", some_list)
+    logger.debug("params=='%s'", params)
     output_json = []
     database_connection = sqlite3.connect(db_filename)
     cursor = database_connection.cursor()
 
-    if some_list:
+    if params:
         try:
             try:
                 logger.info("Writing changes to database...")
-                cursor.execute(query, some_list)
+                cursor.execute(query, params)
                 logger.info("Database write successful.")
             except Exception as some_exception:
                 logger.error("ERROR running query.")
@@ -102,9 +107,9 @@ def db_query(db_filename: str, query: str, some_list: list | None) -> list:
             logger.error("ERROR running query: %s", str(query))
             logger.exception("ERROR=='%s'", some_exception)
 
-    # If some_list is NOT provided, this query will be retrieving data
+    # If params is NOT provided, this query will be retrieving data
     # from the database.
-    if not some_list:
+    if not params:
         # This script doesn't query the db so this functionality hasn't been
         # checked against SQLite syntax (it was adapted from MySQL)
         try:
@@ -160,10 +165,12 @@ def main() -> None:
 
         if create_database(database_filename):
             this_query = """INSERT INTO speedtest (timestamp, download, upload, ping, server_id, server_host) VALUES (:timestamp, :download, :upload, :ping, :server_id, :server_host)"""
-            # Convert dict to list to work with SQLite
-            speedtest_values = [int(x) if isinstance(x, bool) else x for x in speedtest_list.values()]
+            # Bind by name: the keys match the :placeholders in this_query. sqlite3 requires
+            # a mapping for named placeholders -- passing a sequence raises ProgrammingError
+            # on Python 3.14. Booleans are coerced to int since SQLite has no bool type.
+            speedtest_values = {k: int(v) if isinstance(v, bool) else v for k, v in speedtest_list.items()}
             try:
-                db_query(db_filename=database_filename, query=this_query, some_list=speedtest_values)
+                db_query(db_filename=database_filename, query=this_query, params=speedtest_values)
             except Exception as some_exception:
                 logger.error("ERROR running db_query")
                 logger.exception("EXCEPTION='%s'", str(some_exception))
