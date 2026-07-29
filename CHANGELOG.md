@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## [0.9.0] - 2026-07-28
+### Added
+- tests/test_db_query.py: Adding regression coverage for parameter binding — a dict round-trips through the named-placeholder INSERT, binding emits no `DeprecationWarning`, booleans land as integers, and `params=None` still selects the read path.
+### Changed
+- pyproject.toml: Raising `requires-python` (`>=3.12,<3.14` -> `>=3.12,<4.0`). The old ceiling existed because of the binding bug below; with that fixed the full test suite passes on 3.12, 3.13 and 3.14. Note the Dockerfile still pins `PYTHON_VER=3.12`.
+- pyproject.toml: Bumping version (0.8.0 -> 0.9.0).
+- speedtest_aio/speedtest_aio.py: Renaming `db_query`'s `some_list` parameter to `params`, since it now accepts a mapping as well as a sequence, and widening its type to `dict[str, Any] | Sequence[Any] | None`.
+- speedtest_aio/config.py: Syncing `app_dict["version"]` and `app_dict["date"]`.
+### Fixed
+- speedtest_aio/speedtest_aio.py: Binding the INSERT values by name instead of flattening them to a list. The query uses named placeholders (`:timestamp`, `:download`, ...) but was handed a sequence built from `speedtest_list.values()`. Binding a sequence to a named-placeholder query emits a `DeprecationWarning` on Python 3.12 and 3.13 and raises `sqlite3.ProgrammingError` on 3.14, so this silently blocked the project from moving past 3.13. The dict keys already matched the placeholder names, so the fix is to pass the mapping straight through.
+- speedtest_aio/speedtest_aio.py: Correcting the comment that read "Convert dict to list to work with SQLite" — converting to a list is precisely what broke named binding.
+
+
 ## [0.8.0] - 2026-07-27
 ### Added
 - speedtest_aio/logger/custom_logger.py, speedtest_aio/logger/__init__.py: Inlining `CustomLogger` from aaron-common-libs so this project no longer needs the git dependency.

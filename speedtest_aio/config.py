@@ -17,11 +17,11 @@ class Config:
         """Application Variables."""
         self.app_dict = {
             "author": "Aaron Melton <aaron@aaronmelton.com>",
-            "date": "2026-07-27",
+            "date": "2026-07-28",
             "desc": "A Python script to capture speedtest JSON and insert it into a database.",
             "title": "speedtest_aio",
             "url": "https://github.com/aaronmelton/speedtest_aio",
-            "version": "0.8.0",
+            "version": "0.9.0",
         }
 
         # Logging Variables
