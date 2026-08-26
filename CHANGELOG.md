@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.10.0] - 2026-08-26
+
+### Added
+
+- CLAUDE.md guidance file for Claude Code sessions
+
 ## [0.9.0] - 2026-07-28
 ### Added
 - tests/test_db_query.py: Adding regression coverage for parameter binding — a dict round-trips through the named-placeholder INSERT, binding emits no `DeprecationWarning`, booleans land as integers, and `params=None` still selects the read path.
